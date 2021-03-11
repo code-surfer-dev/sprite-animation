@@ -1,0 +1,19 @@
+{
+  "name": "sprite-animation",
+  "version": "1.0.0",
+  "description": "Fun with sprite animation in HTML",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/code-surfer-dev/sprite-animation.git"
+  },
+  "author": "code-surfer-dev <ingo@codesurfer.dev> (https://codesurfer.dev/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/code-surfer-dev/sprite-animation/issues"
+  },
+  "homepage": "https://github.com/code-surfer-dev/sprite-animation#readme"
+}
