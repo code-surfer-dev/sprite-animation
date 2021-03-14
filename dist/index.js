@@ -1,3 +1,4 @@
+"use strict";
 var canvas = document.querySelector('canvas');
 var ctx = canvas.getContext('2d');
 canvas.width = 800;
@@ -13,7 +14,7 @@ var player = {
     frameX: 0,
     frameY: 0,
     speed: 10,
-    moving: false
+    moving: false,
 };
 var playerSprite = new Image();
 playerSprite.src = './images/darthvader.png';

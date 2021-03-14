@@ -1,10 +1,10 @@
-const canvas = document.querySelector('canvas');
-const ctx = canvas.getContext('2d');
+const canvas = document.querySelector('canvas')!;
+const ctx = canvas.getContext('2d')!;
 
 canvas.width = 800;
 canvas.height = 500;
 
-const keys = [];
+const keys: string[] = [];
 
 const player = {
   x: 0,
@@ -22,7 +22,17 @@ const player = {
 const playerSprite = new Image();
 playerSprite.src = './images/darthvader.png';
 
-const drawSprite = (img, sX, sY, sW, sH, dX, dY, dW, dH) => {
+const drawSprite = (
+  img: CanvasImageSource,
+  sX: number,
+  sY: number,
+  sW: number,
+  sH: number,
+  dX: number,
+  dY: number,
+  dW: number,
+  dH: number,
+) => {
   ctx.drawImage(img, sX, sY, sW, sH, dX, dY, dW, dH);
 };
 
