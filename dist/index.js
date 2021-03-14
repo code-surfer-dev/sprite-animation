@@ -22,23 +22,23 @@ var drawSprite = function (img, sX, sY, sW, sH, dX, dY, dW, dH) {
     ctx.drawImage(img, sX, sY, sW, sH, dX, dY, dW, dH);
 };
 var movePlayer = function () {
-    if (keys['ArrowUp'] && player.y >= player.speed) {
+    if ('ArrowUp' in keys && player.y >= player.speed) {
         player.y -= player.speed;
         player.frameY = 3;
         player.moving = true;
     }
-    if (keys['ArrowDown'] &&
+    if ('ArrowDown' in keys &&
         player.y + player.height <= canvas.height - player.speed) {
         player.y += player.speed;
         player.frameY = 0;
         player.moving = true;
     }
-    if (keys['ArrowLeft'] && player.x >= player.speed) {
+    if ('ArrowLeft' in keys && player.x >= player.speed) {
         player.x -= player.speed;
         player.frameY = 1;
         player.moving = true;
     }
-    if (keys['ArrowRight'] &&
+    if ('ArrowRight' in keys &&
         player.x + player.width <= canvas.width - player.speed) {
         player.x += player.speed;
         player.frameY = 2;
@@ -54,10 +54,10 @@ var changeSpriteFrame = function () {
     }
 };
 window.addEventListener('keydown', function (event) {
-    keys[event.key] = true;
+    keys.push(event.key);
 });
 window.addEventListener('keyup', function (event) {
-    delete keys[event.key];
+    keys.splice(keys.indexOf(event.key), 1);
     player.moving = false;
 });
 var animate = function () {
@@ -66,17 +66,17 @@ var animate = function () {
     movePlayer();
     changeSpriteFrame();
 };
-var fps, fpsInterval, startTime, now, then, elapsed;
+var fpsInterval, startTime, now, then;
 var startAnimating = function (fps) {
     fpsInterval = 1000 / fps;
-    then = Date.now();
+    then = new Date().getTime();
     startTime = then;
     animationFrame();
 };
 var animationFrame = function () {
     requestAnimationFrame(animationFrame);
-    now = Date.now();
-    elapsed = now - then;
+    now = new Date().getTime();
+    var elapsed = now - then;
     if (elapsed > fpsInterval) {
         then = now - (elapsed % fpsInterval);
         animate();

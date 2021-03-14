@@ -37,26 +37,26 @@ const drawSprite = (
 };
 
 const movePlayer = () => {
-  if (keys['ArrowUp'] && player.y >= player.speed) {
+  if ('ArrowUp' in keys && player.y >= player.speed) {
     player.y -= player.speed;
     player.frameY = 3;
     player.moving = true;
   }
   if (
-    keys['ArrowDown'] &&
+    'ArrowDown' in keys &&
     player.y + player.height <= canvas.height - player.speed
   ) {
     player.y += player.speed;
     player.frameY = 0;
     player.moving = true;
   }
-  if (keys['ArrowLeft'] && player.x >= player.speed) {
+  if ('ArrowLeft' in keys && player.x >= player.speed) {
     player.x -= player.speed;
     player.frameY = 1;
     player.moving = true;
   }
   if (
-    keys['ArrowRight'] &&
+    'ArrowRight' in keys &&
     player.x + player.width <= canvas.width - player.speed
   ) {
     player.x += player.speed;
@@ -74,11 +74,11 @@ const changeSpriteFrame = () => {
 };
 
 window.addEventListener('keydown', event => {
-  keys[event.key] = true;
+  keys.push(event.key);
 });
 
 window.addEventListener('keyup', event => {
-  delete keys[event.key];
+  keys.splice(keys.indexOf(event.key), 1);
   player.moving = false;
 });
 
@@ -99,19 +99,19 @@ const animate = () => {
   changeSpriteFrame();
 };
 
-let fps, fpsInterval, startTime, now, then, elapsed;
+let fpsInterval: number, startTime: number, now: number, then: number;
 
-const startAnimating = fps => {
+const startAnimating = (fps: number) => {
   fpsInterval = 1000 / fps;
-  then = Date.now();
+  then = new Date().getTime();
   startTime = then;
   animationFrame();
 };
 
 const animationFrame = () => {
   requestAnimationFrame(animationFrame);
-  now = Date.now();
-  elapsed = now - then;
+  now = new Date().getTime();
+  const elapsed: number = now - then;
   if (elapsed > fpsInterval) {
     then = now - (elapsed % fpsInterval);
     animate();
