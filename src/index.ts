@@ -37,26 +37,26 @@ const drawSprite = (
 };
 
 const movePlayer = () => {
-  if ('ArrowUp' in keys && player.y >= player.speed) {
+  if (keys.includes('ArrowUp') && player.y >= player.speed) {
     player.y -= player.speed;
     player.frameY = 3;
     player.moving = true;
   }
   if (
-    'ArrowDown' in keys &&
+    keys.includes('ArrowDown') &&
     player.y + player.height <= canvas.height - player.speed
   ) {
     player.y += player.speed;
     player.frameY = 0;
     player.moving = true;
   }
-  if ('ArrowLeft' in keys && player.x >= player.speed) {
+  if (keys.includes('ArrowLeft') && player.x >= player.speed) {
     player.x -= player.speed;
     player.frameY = 1;
     player.moving = true;
   }
   if (
-    'ArrowRight' in keys &&
+    keys.includes('ArrowRight') &&
     player.x + player.width <= canvas.width - player.speed
   ) {
     player.x += player.speed;
@@ -74,7 +74,7 @@ const changeSpriteFrame = () => {
 };
 
 window.addEventListener('keydown', event => {
-  keys.push(event.key);
+  if (!keys.includes(event.key)) keys.push(event.key);
 });
 
 window.addEventListener('keyup', event => {

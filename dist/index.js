@@ -1,10 +1,10 @@
 "use strict";
-var canvas = document.querySelector('canvas');
-var ctx = canvas.getContext('2d');
+const canvas = document.querySelector('canvas');
+const ctx = canvas.getContext('2d');
 canvas.width = 800;
 canvas.height = 500;
-var keys = [];
-var player = {
+const keys = [];
+const player = {
     x: 0,
     y: 0,
     width: 32,
@@ -16,36 +16,36 @@ var player = {
     speed: 10,
     moving: false,
 };
-var playerSprite = new Image();
+const playerSprite = new Image();
 playerSprite.src = './images/darthvader.png';
-var drawSprite = function (img, sX, sY, sW, sH, dX, dY, dW, dH) {
+const drawSprite = (img, sX, sY, sW, sH, dX, dY, dW, dH) => {
     ctx.drawImage(img, sX, sY, sW, sH, dX, dY, dW, dH);
 };
-var movePlayer = function () {
-    if ('ArrowUp' in keys && player.y >= player.speed) {
+const movePlayer = () => {
+    if (keys.includes('ArrowUp') && player.y >= player.speed) {
         player.y -= player.speed;
         player.frameY = 3;
         player.moving = true;
     }
-    if ('ArrowDown' in keys &&
+    if (keys.includes('ArrowDown') &&
         player.y + player.height <= canvas.height - player.speed) {
         player.y += player.speed;
         player.frameY = 0;
         player.moving = true;
     }
-    if ('ArrowLeft' in keys && player.x >= player.speed) {
+    if (keys.includes('ArrowLeft') && player.x >= player.speed) {
         player.x -= player.speed;
         player.frameY = 1;
         player.moving = true;
     }
-    if ('ArrowRight' in keys &&
+    if (keys.includes('ArrowRight') &&
         player.x + player.width <= canvas.width - player.speed) {
         player.x += player.speed;
         player.frameY = 2;
         player.moving = true;
     }
 };
-var changeSpriteFrame = function () {
+const changeSpriteFrame = () => {
     if (player.frameX < 3 && player.moving) {
         player.frameX++;
     }
@@ -53,30 +53,31 @@ var changeSpriteFrame = function () {
         player.frameX = 0;
     }
 };
-window.addEventListener('keydown', function (event) {
-    keys.push(event.key);
+window.addEventListener('keydown', event => {
+    if (!keys.includes(event.key))
+        keys.push(event.key);
 });
-window.addEventListener('keyup', function (event) {
+window.addEventListener('keyup', event => {
     keys.splice(keys.indexOf(event.key), 1);
     player.moving = false;
 });
-var animate = function () {
+const animate = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawSprite(playerSprite, player.width * player.frameX, player.height * player.frameY, player.width, player.height, player.x, player.y, player.width * 2, player.height * 2);
     movePlayer();
     changeSpriteFrame();
 };
-var fpsInterval, startTime, now, then;
-var startAnimating = function (fps) {
+let fpsInterval, startTime, now, then;
+const startAnimating = (fps) => {
     fpsInterval = 1000 / fps;
     then = new Date().getTime();
     startTime = then;
     animationFrame();
 };
-var animationFrame = function () {
+const animationFrame = () => {
     requestAnimationFrame(animationFrame);
     now = new Date().getTime();
-    var elapsed = now - then;
+    const elapsed = now - then;
     if (elapsed > fpsInterval) {
         then = now - (elapsed % fpsInterval);
         animate();
