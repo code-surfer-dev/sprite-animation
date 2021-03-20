@@ -10,5 +10,7 @@ body {
 canvas {
   width: 800px;
   height: 500px;
-  background-color: #efefef;
+  background-image: url('./images/death-star-interior-panel.png');
+  background-repeat: repeat;
+  background-color: #3f3f3f;
 }

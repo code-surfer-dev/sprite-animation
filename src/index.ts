@@ -26,6 +26,46 @@ interface Character extends Animated, Moveable {
   height: number;
 }
 
+class AnimatedProp implements Animated {
+  sprite: CanvasImageSource;
+
+  constructor(
+    public x: number,
+    public y: number,
+    public width: number,
+    public height: number,
+    src: string,
+    public frameX: number,
+    public frameY: number,
+  ) {
+    this.sprite = new Image();
+    this.sprite.src = src;
+  }
+
+  changeSpriteFrame() {
+    if (this.frameX < 3) {
+      this.frameX++;
+    } else {
+      this.frameX = 0;
+    }
+  }
+
+  draw() {
+    this.changeSpriteFrame();
+    ctx.drawImage(
+      this.sprite,
+      this.width * this.frameX,
+      this.height * this.frameY,
+      this.width,
+      this.height,
+      this.x,
+      this.y,
+      this.width,
+      this.height,
+    );
+  }
+}
+
 class Player implements Character {
   sprite: CanvasImageSource;
 
@@ -99,6 +139,16 @@ class Player implements Character {
   }
 }
 
+const prop = new AnimatedProp(
+  52,
+  0,
+  52,
+  96,
+  './images/death-star-interior-light-panel.png',
+  0,
+  0,
+);
+
 const player = new Player(
   0,
   0,
@@ -121,6 +171,7 @@ window.addEventListener('keyup', event => {
 
 const animate = () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  prop.draw();
   player.draw();
 };
 

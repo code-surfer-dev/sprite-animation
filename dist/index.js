@@ -4,6 +4,30 @@ const ctx = canvas.getContext('2d');
 canvas.width = 800;
 canvas.height = 500;
 const keys = [];
+class AnimatedProp {
+    constructor(x, y, width, height, src, frameX, frameY) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.frameX = frameX;
+        this.frameY = frameY;
+        this.sprite = new Image();
+        this.sprite.src = src;
+    }
+    changeSpriteFrame() {
+        if (this.frameX < 3) {
+            this.frameX++;
+        }
+        else {
+            this.frameX = 0;
+        }
+    }
+    draw() {
+        this.changeSpriteFrame();
+        ctx.drawImage(this.sprite, this.width * this.frameX, this.height * this.frameY, this.width, this.height, this.x, this.y, this.width, this.height);
+    }
+}
 class Player {
     constructor(x, y, width, height, src, frameX, frameY, speed, moving) {
         this.x = x;
@@ -56,6 +80,7 @@ class Player {
         ctx.drawImage(this.sprite, this.width * this.frameX, this.height * this.frameY, this.width, this.height, this.x, this.y, this.width, this.height);
     }
 }
+const prop = new AnimatedProp(52, 0, 52, 96, './images/death-star-interior-light-panel.png', 0, 0);
 const player = new Player(0, 0, 32, 48, './images/darthvader.png', 0, 0, 10, false);
 window.addEventListener('keydown', event => {
     if (!keys.includes(event.key))
@@ -66,6 +91,7 @@ window.addEventListener('keyup', event => {
 });
 const animate = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    prop.draw();
     player.draw();
 };
 let fpsInterval, startTime, now, then;
