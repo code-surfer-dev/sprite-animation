@@ -6,72 +6,110 @@ canvas.height = 500;
 
 const keys: string[] = [];
 
-const player = {
-  x: 0,
-  y: 0,
-  width: 32,
-  height: 48,
-  //   width: 50,
-  //   height: 48,
-  frameX: 0,
-  frameY: 0,
-  speed: 10,
-  moving: false,
-};
+interface Animated {
+  sprite: CanvasImageSource;
+  frameX: number;
+  frameY: number;
+  changeSpriteFrame(): void;
+}
 
-const playerSprite = new Image();
-playerSprite.src = './images/darthvader.png';
+interface Moveable {
+  speed: number;
+  moving: boolean;
+  move(): void;
+}
 
-const drawSprite = (
-  img: CanvasImageSource,
-  sX: number,
-  sY: number,
-  sW: number,
-  sH: number,
-  dX: number,
-  dY: number,
-  dW: number,
-  dH: number,
-) => {
-  ctx.drawImage(img, sX, sY, sW, sH, dX, dY, dW, dH);
-};
+interface Character extends Animated, Moveable {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
 
-const movePlayer = () => {
-  if (keys.includes('ArrowUp') && player.y >= player.speed) {
-    player.y -= player.speed;
-    player.frameY = 3;
-    player.moving = true;
-  }
-  if (
-    keys.includes('ArrowDown') &&
-    player.y + player.height <= canvas.height - player.speed
+class Player implements Character {
+  sprite: CanvasImageSource;
+
+  constructor(
+    public x: number,
+    public y: number,
+    public width: number,
+    public height: number,
+    src: string,
+    public frameX: number,
+    public frameY: number,
+    public speed: number,
+    public moving: boolean,
   ) {
-    player.y += player.speed;
-    player.frameY = 0;
-    player.moving = true;
+    this.sprite = new Image();
+    this.sprite.src = src;
   }
-  if (keys.includes('ArrowLeft') && player.x >= player.speed) {
-    player.x -= player.speed;
-    player.frameY = 1;
-    player.moving = true;
-  }
-  if (
-    keys.includes('ArrowRight') &&
-    player.x + player.width <= canvas.width - player.speed
-  ) {
-    player.x += player.speed;
-    player.frameY = 2;
-    player.moving = true;
-  }
-};
 
-const changeSpriteFrame = () => {
-  if (player.frameX < 3 && player.moving) {
-    player.frameX++;
-  } else {
-    player.frameX = 0;
+  changeSpriteFrame() {
+    if (this.frameX < 3 && this.moving) {
+      this.frameX++;
+    } else {
+      this.frameX = 0;
+    }
   }
-};
+
+  move() {
+    this.moving = false;
+    if (keys.includes('ArrowUp') && this.y >= this.speed) {
+      this.y -= this.speed;
+      this.frameY = 3;
+      this.moving = true;
+    }
+    if (
+      keys.includes('ArrowDown') &&
+      this.y + this.height <= canvas.height - this.speed
+    ) {
+      this.y += this.speed;
+      this.frameY = 0;
+      this.moving = true;
+    }
+    if (keys.includes('ArrowLeft') && this.x >= this.speed) {
+      this.x -= this.speed;
+      this.frameY = 1;
+      this.moving = true;
+    }
+    if (
+      keys.includes('ArrowRight') &&
+      this.x + this.width <= canvas.width - this.speed
+    ) {
+      this.x += this.speed;
+      this.frameY = 2;
+      this.moving = true;
+    }
+  }
+
+  draw() {
+    this.move();
+    this.changeSpriteFrame();
+    ctx.drawImage(
+      this.sprite,
+      this.width * this.frameX,
+      this.height * this.frameY,
+      this.width,
+      this.height,
+      this.x,
+      this.y,
+      this.width,
+      this.height,
+    );
+  }
+}
+
+const player = new Player(
+  0,
+  0,
+  32,
+  48,
+  './images/darthvader.png',
+  0,
+  0,
+  10,
+  false,
+);
 
 window.addEventListener('keydown', event => {
   if (!keys.includes(event.key)) keys.push(event.key);
@@ -79,34 +117,14 @@ window.addEventListener('keydown', event => {
 
 window.addEventListener('keyup', event => {
   keys.splice(keys.indexOf(event.key), 1);
-  player.moving = false;
 });
 
 const animate = () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  drawSprite(
-    playerSprite,
-    player.width * player.frameX,
-    player.height * player.frameY,
-    player.width,
-    player.height,
-    player.x,
-    player.y,
-    player.width * 2,
-    player.height * 2,
-  );
-  movePlayer();
-  changeSpriteFrame();
+  player.draw();
 };
 
 let fpsInterval: number, startTime: number, now: number, then: number;
-
-const startAnimating = (fps: number) => {
-  fpsInterval = 1000 / fps;
-  then = new Date().getTime();
-  startTime = then;
-  animationFrame();
-};
 
 const animationFrame = () => {
   requestAnimationFrame(animationFrame);
@@ -116,6 +134,13 @@ const animationFrame = () => {
     then = now - (elapsed % fpsInterval);
     animate();
   }
+};
+
+const startAnimating = (fps: number) => {
+  fpsInterval = 1000 / fps;
+  then = new Date().getTime();
+  startTime = then;
+  animationFrame();
 };
 
 startAnimating(10);
